@@ -29,6 +29,7 @@
         $(function() {
             var page = 1;
             function loadData() {
+                $(window).unbind('scroll', scroll);
                 $.ajax({
                     type: 'GET',
                     url: 'http://gank.io/api/data/%E7%A6%8F%E5%88%A9/20/' + (page++),
@@ -36,20 +37,23 @@
                     success: function(data) {
                         data = data.results;
                         for (var i = 0; i < data.length; i++) {
-                            $('.container').append('<img class="lazy" data-original=' + data[i].url +'>');
+                            $('.container').append('<img class="lazy" data-original=' + data[i].url + '>');
                         }
                         $('img.lazy').lazyload({
                             effect: "fadeIn"
                         }).removeClass('lazy');
+                        $(window).bind('scroll', scroll);
                     }
                 })
             }
-            loadData();
-            window.addEventListener('scroll', function() {
+
+            function scroll() {
                 if (window.pageYOffset + window.innerHeight >= document.documentElement.scrollHeight) {
                     loadData();
                 }
-            })
+            }
+            $(window).bind('scroll', scroll);
+            loadData();
         })
     </script>
 </body>
